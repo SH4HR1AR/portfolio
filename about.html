@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>About The site</title>
+    <link rel="stylesheet" href="about.css">
+    <link rel="icon" type="image/jpg" href="AHN1.jpg">
+</head>
+<body>
+    <header class="header">
+        <a class="logo" href="index.html">Tanjimmmmmmm</a>
+        <input type="checkbox" id="menu-btn" class="menu-btn">
+        <label class="menu-icon" for="menu-btn">
+            <span class="nav-icon"></span>
+        </label>
+        <ul class="menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a2 href="about.html">About</a2></li>
+
+            <label class="switch">
+                <input type="checkbox" onclick="toggleDarkMode()">
+                <span class="slider"></span>
+              </label>
+        </ul>
+    </header>
+    <div>
+        <div class="wrapper">
+            <div class="balls"></div>
+            <div class="balls"></div> 
+        </div>
+        <div class="container">
+            <div class="card">
+                <div class="content">
+                    <h3>About</h3>
+                    <p>Thank you for visiting my website. I am Tanjim. These is a portfolio website made with Emona er Na pawa valobasha
+                        These is a personal website.
+                        In these website I have uploaded some usefull Balchal and some of my Bombed Area locations
+                        You can see my Bombed areas in a specific tab
+                        In future the website will get more changes stay with us to get those usefull changes.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="circle"></div>
+    </div>
+    <script src='index.js'></script>
+    <script>
+        document.querySelector("body").addEventListener("mousemove", animate);
+
+        function animate() {
+        let wrapper = document.querySelectorAll(".balls");
+        wrapper.forEach((balls) => {
+            let x = balls.getBoundingClientRect().left + balls.clientWidth / 2;
+            let y = balls.getBoundingClientRect().top + balls.clientHeight / 2;
+
+            let radian = Math.atan2(event.pageX - x, event.pageY - y);
+            let rotate = radian * (180 / Math.PI) * -1 + 270;
+            balls.style.transform = `rotate(${rotate}deg)`;
+        });
+        }
+        console.clear();
+
+// Select the circle element
+const circleElement = document.querySelector('.circle');
+
+// Create objects to track mouse position and custom cursor position
+const mouse = { x: 0, y: 0 }; // Track current mouse position
+const previousMouse = { x: 0, y: 0 } // Store the previous mouse position
+const circle = { x: 0, y: 0 }; // Track the circle position
+
+// Initialize variables to track scaling and rotation
+let currentScale = 0; // Track current scale value
+let currentAngle = 0; // Track current angle value
+
+// Update mouse position on the 'mousemove' event
+window.addEventListener('mousemove', (e) => {
+  mouse.x = e.x;
+  mouse.y = e.y;
+});
+
+// Smoothing factor for cursor movement speed (0 = smoother, 1 = instant)
+const speed = 0.17;
+
+// Start animation
+const tick = () => {
+  // MOVE
+  // Calculate circle movement based on mouse position and smoothing
+  circle.x += (mouse.x - circle.x) * speed;
+  circle.y += (mouse.y - circle.y) * speed;
+  // Create a transformation string for cursor translation
+  const translateTransform = `translate(${circle.x}px, ${circle.y}px)`;
+
+  // SQUEEZE
+  // 1. Calculate the change in mouse position (deltaMouse)
+  const deltaMouseX = mouse.x - previousMouse.x;
+  const deltaMouseY = mouse.y - previousMouse.y;
+  // Update previous mouse position for the next frame
+  previousMouse.x = mouse.x;
+  previousMouse.y = mouse.y;
+  // 2. Calculate mouse velocity using Pythagorean theorem and adjust speed
+  const mouseVelocity = Math.min(Math.sqrt(deltaMouseX**2 + deltaMouseY**2) * 4, 150); 
+  // 3. Convert mouse velocity to a value in the range [0, 0.5]
+  const scaleValue = (mouseVelocity / 150) * 0.5;
+  // 4. Smoothly update the current scale
+  currentScale += (scaleValue - currentScale) * speed;
+  // 5. Create a transformation string for scaling
+  const scaleTransform = `scale(${1 + currentScale}, ${1 - currentScale})`;
+
+  // ROTATE
+  // 1. Calculate the angle using the atan2 function
+  const angle = Math.atan2(deltaMouseY, deltaMouseX) * 180 / Math.PI;
+  // 2. Check for a threshold to reduce shakiness at low mouse velocity
+  if (mouseVelocity > 20) {
+    currentAngle = angle;
+  }
+  // 3. Create a transformation string for rotation
+  const rotateTransform = `rotate(${currentAngle}deg)`;
+
+  // Apply all transformations to the circle element in a specific order: translate -> rotate -> scale
+  circleElement.style.transform = `${translateTransform} ${rotateTransform} ${scaleTransform}`;
+
+  // Request the next frame to continue the animation
+  window.requestAnimationFrame(tick);
+}
+
+// Start the animation loop
+tick();
+    </script>  
+</body>
+</html>
